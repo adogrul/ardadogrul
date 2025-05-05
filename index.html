@@ -14,9 +14,35 @@
         h1 {
             font-size: 3em;
         }
+        .letter {
+            opacity: 0;
+            display: inline-block;
+            transition: opacity 0.3s ease-in;
+        }
+        .visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <h1>Available Soon</h1>
+    <h1 id="animatedText"></h1>
+
+    <script>
+        const text = "Available Soon";
+        const container = document.getElementById("animatedText");
+
+        // Harfleri tek tek span olarak ekle
+        text.split("").forEach((char, index) => {
+            const span = document.createElement("span");
+            span.textContent = char;
+            span.classList.add("letter");
+            container.appendChild(span);
+
+            // Harfi belirli bir gecikmeyle görünür yap
+            setTimeout(() => {
+                span.classList.add("visible");
+            }, index * 150); // 150ms gecikmeli
+        });
+    </script>
 </body>
 </html>
