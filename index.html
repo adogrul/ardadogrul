@@ -56,8 +56,6 @@
         const text2 = "Soon...";
         const container = document.getElementById("animatedText");
         function animateText() {
-            container.innerHTML = " ";
-
             text2.split("").forEach((char, index) => {
                 const span = document.createElement("span");
                 span.textContent = char;
