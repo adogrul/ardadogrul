@@ -31,18 +31,22 @@
         const text = "Available Soon";
         const container = document.getElementById("animatedText");
 
-        // Harfleri tek tek span olarak ekle
-        text.split("").forEach((char, index) => {
-            const span = document.createElement("span");
-            span.textContent = char;
-            span.classList.add("letter");
-            container.appendChild(span);
+        function animateText() {
+            container.innerHTML = "";
 
-            // Harfi belirli bir gecikmeyle görünür yap
-            setTimeout(() => {
-                span.classList.add("visible");
-            }, index * 150); // 150ms gecikmeli
-        });
+            text.split("").forEach((char, index) => {
+                const span = document.createElement("span");
+                span.textContent = char;
+                span.classList.add("letter");
+                container.appendChild(span);
+
+                setTimeout(() => {
+                    span.classList.add("visible");
+                }, index * 150);
+            });
+        }
+        animateText();
+        setInterval(animateText,1000);
     </script>
 </body>
 </html>
