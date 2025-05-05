@@ -34,7 +34,7 @@
         function animateText() {
             container.innerHTML = " ";
 
-            text.split("").forEach((char, index) => {
+            text.split(" ").forEach((char, index) => {
                 const span = document.createElement("span");
                 span.textContent = char;
                 span.classList.add("letter");
