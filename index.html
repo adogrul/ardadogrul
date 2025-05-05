@@ -28,7 +28,7 @@
     <h1 id="animatedText"></h1>
 
     <script>
-        const text = "Available";
+        const text = "Available - Soon...";
         
         const container = document.getElementById("animatedText");
         function animateText() {
@@ -50,28 +50,6 @@
             container.innerHTML = "";
             animateText();
         }, text.length * 150 + 1000);
-
-
-        //-------------------About Text2
-        const text2 = "Soon...";
-        const container = document.getElementById("animatedText");
-        function animateText() {
-            text2.split("").forEach((char, index) => {
-                const span = document.createElement("span");
-                span.textContent = char;
-                span.classList.add("letter");
-                container.appendChild(span);
-
-                setTimeout(() => {
-                    span.classList.add("visible");
-                }, index * 150);
-            });
-        }
-        animateText();
-        setInterval(() => {
-            container.innerHTML = "";
-            animateText();
-        }, text2.length * 150 + 1000);
 
         
     </script>
