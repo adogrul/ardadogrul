@@ -218,7 +218,7 @@
     // GitHub API'sinden en son 5 projeyi çek ve sadece proje isimlerini göster
     function loadProjects(container) {
       container.innerHTML = '<p>Projeler yükleniyor...</p>';
-      const githubUsername = 'your-github-username'; // Kendi GitHub kullanıcı adınızı buraya girin
+      const githubUsername = 'adogrul'; // Kendi GitHub kullanıcı adınızı buraya girin
       fetch(`https://api.github.com/users/${githubUsername}/repos?sort=created&direction=desc`)
         .then(response => response.json())
         .then(data => {
