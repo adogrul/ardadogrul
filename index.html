@@ -1,84 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Arda DOĞRUL</title>
-    <style>
-        body {
-            background-color: #f2f2f2;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 20%;
-            color: #333;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Modern Portfolio</title>
+  <style>
+    /* Renk değişkenleri: soluk, kurumsal tonlar */
+    :root {
+      --primary-bg: #f3f4f6;    /* Açık soluk arka plan */
+      --accent-color: #334155;  /* Kurumsal koyu ton (metin ve vurgu) */
+      --secondary-bg: #e2e8f0;  /* İkincil öğeler için açık ton */
+      --menu-bg: #ffffff;       /* Menü için temiz beyaz */
+      --transition-speed: 0.3s;
+    }
 
-        h1 {
-            font-size: 3em;
-        }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--accent-color);
+      overflow-x: hidden;
+    }
 
-        .letter {
-            opacity: 0;
-            display: inline-block;
-            transition: opacity 0.3s ease-in;
-        }
+    /* Genel kaplama ve içerik stili */
+    .container {
+      padding: 2rem;
+      max-width: 960px;
+      margin: auto;
+    }
 
-        .visible {
-            opacity: 1;
-        }
-a {
-    display: inline-block;
-    margin-top: 40px;
-    padding: 12px 28px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid black; 
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    color: #333;
-    text-decoration: none;
-    font-size: 1.1em;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
+    header {
+      text-align: center;
+      padding: 2rem;
+      background: var(--secondary-bg);
+      border-radius: 20px;
+      margin: 2rem;
+      animation: fadeIn 1s ease forwards;
+    }
 
-a:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
-    border-color: #000; 
-}
-    </style>
+    /* Basit fade-in animasyonu */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Menü butonu */
+    button#menuBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+      z-index: 1001;
+    }
+    button#menuBtn:hover {
+      background-color: #1e293b;
+    }
+
+    /* Yan menü stili - Sağdan açılan panel */
+    .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: var(--menu-bg);
+      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+      border-radius: 20px 0 0 20px;
+      transform: translateX(100%);
+      transition: transform var(--transition-speed) ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+    }
+    .menu.active {
+      transform: translateX(0);
+    }
+    .menu a {
+      padding: 15px 20px;
+      text-decoration: none;
+      color: var(--accent-color);
+      border-bottom: 1px solid var(--secondary-bg);
+      transition: background-color var(--transition-speed);
+    }
+    .menu a:hover {
+      background-color: var(--secondary-bg);
+    }
+
+    /* İçerik bölümleri */
+    section {
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease forwards;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      margin: 2rem;
+      font-size: 0.8rem;
+    }
+  </style>
 </head>
 <body>
-    <h1 id="animatedText"></h1>
-    <a href="https://ardadogrul.com" target="_blank">
-        ardadogrul.com
-    </a>
 
-    <script>
-        const text = "Arda - Doğrul...";
+  <!-- Menü butonu -->
+  <button id="menuBtn">Menü</button>
+  
+  <!-- Sağdan kayan yan menü -->
+  <div class="menu" id="sideMenu">
+    <a href="#about">Hakkımda</a>
+    <a href="#projects">Projeler</a>
+    <a href="#skills">Yetenekler</a>
+    <a href="#contact">İletişim</a>
+  </div>
 
-        const container = document.getElementById("animatedText");
-        function animateText() {
-            container.innerHTML = "";
+  <!-- Başlık bölümü -->
+  <header>
+    <h1>Merhaba, Ben Arda</h1>
+    <p>Kişisel portfolyo sayfama hoş geldiniz.</p>
+  </header>
 
-            text.split("").forEach((char, index) => {
-                const span = document.createElement("span");
-                span.textContent = char;
-                span.classList.add("letter");
-                container.appendChild(span);
+  <!-- Ana içerik -->
+  <div class="container">
+    <section id="about">
+      <h2>Hakkımda</h2>
+      <p>Kendimi geliştirmeyi seven, modern ve yenilikçi yaklaşımlarla dolu bir web geliştiricisiyim. Tasarımda keskin hatlardan uzak, yumuşak geçişlere önem veririm.</p>
+    </section>
+    
+    <section id="projects">
+      <h2>Projeler</h2>
+      <p>Yaratıcı ve fonksiyonel projeler üreterek dijital dünyayı daha yaşanabilir kılmayı hedefliyorum.</p>
+    </section>
+    
+    <section id="skills">
+      <h2>Yetenekler</h2>
+      <p>Frontend ve backend teknolojilerinde modern web tasarımlarını hayata geçiriyorum.</p>
+    </section>
+    
+    <section id="contact">
+      <h2>İletişim</h2>
+      <p>Proje ve işbirlikleri için bana <a href="mailto:email@example.com">email@example.com</a> üzerinden ulaşabilirsin.</p>
+    </section>
+  </div>
 
-                setTimeout(() => {
-                    span.classList.add("visible");
-                }, index * 150);
-            });
-        }
+  <footer>
+    <p>&copy; 2025 Arda. Tüm hakları saklıdır.</p>
+  </footer>
 
-        animateText();
-        setInterval(() => {
-            container.innerHTML = "";
-            animateText();
-        }, text.length * 150 + 1000);
-    </script>
+  <!-- Menü açma kapama işlemini kontrol eden JavaScript -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sideMenu = document.getElementById('sideMenu');
+
+    menuBtn.addEventListener('click', () => {
+      sideMenu.classList.toggle('active');
+    });
+  </script>
 </body>
 </html>
