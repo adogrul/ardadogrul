@@ -61,55 +61,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Menü butonu */
-    button#menuBtn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: var(--accent-color);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: background-color var(--transition-speed);
-      z-index: 1001;
-    }
-    button#menuBtn:hover {
-      background-color: #1e293b;
-    }
-    
-    /* Yan menü - sağdan açılan panel */
-    .menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 250px;
-      height: 100%;
-      background-color: var(--menu-bg);
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-      border-radius: 20px 0 0 20px;
-      transform: translateX(100%);
-      transition: transform var(--transition-speed) ease;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      padding-top: 60px;
-    }
-    .menu.active {
-      transform: translateX(0);
-    }
-    .menu a {
-      padding: 15px 20px;
-      text-decoration: none;
-      color: var(--accent-color);
-      border-bottom: 1px solid var(--secondary-bg);
-      transition: background-color var(--transition-speed);
-    }
-    .menu a:hover {
-      background-color: var(--secondary-bg);
-    }
-    
     /* Kart (accordion) stilleri */
     .card {
       background: #fff;
@@ -204,17 +155,6 @@
   <!-- Arka plan için canvas: fare hareketlerini takip eden çizgi burada çizilecek -->
   <canvas id="backgroundCanvas"></canvas>
 
-  <!-- Menü butonu -->
-  <button id="menuBtn">Menü</button>
-  
-  <!-- Sağdan kayan yan menü -->
-  <div class="menu" id="sideMenu">
-    <a href="#about">Hakkımda</a>
-    <a href="#projects">Projeler</a>
-    <a href="#skills">Yetenekler</a>
-    <a href="#contact">İletişim</a>
-  </div>
-
   <!-- Başlık bölümü -->
   <header>
     <h1>Merhaba, Ben Arda</h1>
@@ -263,12 +203,6 @@
 
   <!-- JavaScript Kodları -->
   <script>
-    // Kayan Menü
-    const menuBtn = document.getElementById('menuBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    menuBtn.addEventListener('click', () => {
-      sideMenu.classList.toggle('active');
-    });
 
     // Kart (Accordion) davranışı
     const cards = document.querySelectorAll('.card');
