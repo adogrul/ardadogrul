@@ -61,6 +61,23 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
+    /* Menü butonu */
+    button#menuBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+      z-index: 1001;
+    }
+    button#menuBtn:hover {
+      background-color: #1e293b;
+    }
     /* Kart (accordion) stilleri */
     .card {
       background: #fff;
@@ -152,6 +169,9 @@
   <footer>
     <p>&copy; 2025 Arda. Tüm hakları saklıdır.</p>
   </footer>
+
+  <!-- Menü açma/kapama ve kartların açılır kapanır işlevlerinin JavaScript kodları -->
+  <script>
 
     // Kart (Accordion) davranışı
     const cards = document.querySelectorAll('.card');
