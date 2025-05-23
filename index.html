@@ -9,8 +9,8 @@
     :root {
       --primary-bg: #f3f4f6;      /* Açık arka plan */
       --accent-color: #334155;    /* Kurumsal koyu ton (metin ve vurgu) */
+      --menu-bg: #ffffff;  
       --secondary-bg: #e2e8f0;    /* Kart başlıkları için hafif ton */
-      --menu-bg: #ffffff;         /* Menü arka planı */
       --transition-speed: 0.3s;
     }
 
@@ -61,23 +61,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Menü butonu */
-    button#menuBtn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: var(--accent-color);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: background-color var(--transition-speed);
-      z-index: 1001;
-    }
-    button#menuBtn:hover {
-      background-color: #1e293b;
-    }
+    
     /* Kart (accordion) stilleri */
     .card {
       background: #fff;
@@ -108,8 +92,24 @@
       padding: 0 2rem;
     }
     .card.active .card-content {
-      max-height: 200px; /* Yeterli bir max yükseklik değeri */
+      max-height: 400px; /* İçeriğe göre yeterli bir yükseklik */
       padding: 1rem 2rem;
+    }
+    /* Proje listesi stili */
+    .project-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .project-list li {
+      padding: 5px 0;
+    }
+    .project-list li a {
+      text-decoration: none;
+      color: var(--accent-color);
+      transition: color 0.3s ease;
+    }
+    .project-list li a:hover {
+      color: #1e293b;
     }
     
     footer {
@@ -124,7 +124,6 @@
 
   <!-- Arka plan için canvas: fare hareketlerini takip eden çizgi burada çizilecek -->
   <canvas id="backgroundCanvas"></canvas>
-
   <!-- Başlık bölümü -->
   <header>
     <h1>Merhaba, Ben Arda</h1>
@@ -145,7 +144,8 @@
     <div class="card" id="projects">
       <div class="card-header">Projeler</div>
       <div class="card-content">
-        <p>Yaratıcı ve fonksiyonel projeler üreterek dijital dünyayı daha yaşanabilir kılmayı hedefliyorum.</p>
+        <!-- İçi dinamik olarak doldurulacak -->
+        <p>Projeler yükleniyor...</p>
       </div>
     </div>
     
@@ -153,7 +153,7 @@
     <div class="card" id="skills">
       <div class="card-header">Yetenekler</div>
       <div class="card-content">
-        <p>Frontend ve backend teknolojilerinde modern web tasarımlarını hayata geçiriyorum.</p>
+        <p>Frontend ve backend teknolojilerinde modern web tasarımlarını hayata geçiriyorum. JavaScript, Python, PHP gibi diller ile çalışıyorum.</p>
       </div>
     </div>
     
@@ -172,15 +172,42 @@
 
   <!-- Menü açma/kapama ve kartların açılır kapanır işlevlerinin JavaScript kodları -->
   <script>
-
     // Kart (Accordion) davranışı
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
       const header = card.querySelector('.card-header');
       header.addEventListener('click', () => {
+        // Açma/kapatma işlemi
         card.classList.toggle('active');
+
+        // Eğer bu kart "Projeler" ise ve henüz doldurulmadıysa verileri çek
+        if (card.id === 'projects' && card.classList.contains('active') && !card.hasAttribute('data-loaded')) {
+          loadProjects(card.querySelector('.card-content'));
+          card.setAttribute('data-loaded', 'true');
+        }
       });
     });
+
+    // GitHub API'den en son 5 projeyi çeken fonksiyon
+    function loadProjects(container) {
+      container.innerHTML = '<p>Projeler yükleniyor...</p>';
+      const githubUsername = 'adogrul'; // GitHub kullanıcı adını buraya yaz
+      fetch(`https://api.github.com/users/${githubUsername}/repos?sort=created&direction=desc`)
+        .then(response => response.json())
+        .then(data => {
+          const latestFive = data.slice(0, 5);
+          let html = '<ul class="project-list">';
+          latestFive.forEach(repo => {
+            html += `<li><a href="${repo.html_url}" target="_blank">${repo.name}</a></li>`;
+          });
+          html += '</ul>';
+          container.innerHTML = html;
+        })
+        .catch(error => {
+          container.innerHTML = '<p>Projeler yüklenirken hata oluştu.</p>';
+          console.error('Error fetching projects: ', error);
+        });
+    }
   </script>
 
   <!-- Arka planda fare hareketini takip eden çizgi efekti (iz bırakmadan) -->
@@ -196,31 +223,30 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Başlangıç noktaları: merkeze yakın başlangıç
+    // Başlangıç noktaları: merkezden başlıyor
     let targetX = window.innerWidth / 2;
     let targetY = window.innerHeight / 2;
     let currentX = targetX, currentY = targetY;
     let prevX = currentX, prevY = currentY;
 
-    // Fare hareketi ile hedef konum güncelle
+    // Fare hareketini yakala
     window.addEventListener('mousemove', (e) => {
       targetX = e.clientX;
       targetY = e.clientY;
     });
 
-    // Her frame'de canvas'ı tamamen temizleyerek iz bırakmaz
+    // Her frame'de canvas'ı temizleyip, çizgiyi güncelle (iz kalmadan)
     function animate() {
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Linear interpolation (lerp) ile yumuşak geçiş
       currentX += (targetX - currentX) * 0.15;
       currentY += (targetY - currentY) * 0.15;
 
       ctx.beginPath();
       ctx.moveTo(prevX, prevY);
       ctx.lineTo(currentX, currentY);
-      ctx.strokeStyle = 'rgba(51, 65, 85, 0.8)'; /* Accent rengi */
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.8)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
