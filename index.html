@@ -9,8 +9,8 @@
     :root {
       --primary-bg: #f3f4f6;      /* Açık arka plan */
       --accent-color: #334155;    /* Kurumsal koyu ton (metin ve vurgu) */
-      --menu-bg: #ffffff;  
       --secondary-bg: #e2e8f0;    /* Kart başlıkları için hafif ton */
+      --menu-bg: #ffffff;         /* Menü arka planı */
       --transition-speed: 0.3s;
     }
 
@@ -61,6 +61,54 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
+    /* Menü butonu */
+    button#menuBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+      z-index: 1001;
+    }
+    button#menuBtn:hover {
+      background-color: #1e293b;
+    }
+    
+    /* Yan menü - sağdan açılan panel */
+    .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: var(--menu-bg);
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+      border-radius: 20px 0 0 20px;
+      transform: translateX(100%);
+      transition: transform var(--transition-speed) ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+    }
+    .menu.active {
+      transform: translateX(0);
+    }
+    .menu a {
+      padding: 15px 20px;
+      text-decoration: none;
+      color: var(--accent-color);
+      border-bottom: 1px solid var(--secondary-bg);
+      transition: background-color var(--transition-speed);
+    }
+    .menu a:hover {
+      background-color: var(--secondary-bg);
+    }
     
     /* Kart (accordion) stilleri */
     .card {
@@ -95,21 +143,52 @@
       max-height: 400px; /* İçeriğe göre yeterli bir yükseklik */
       padding: 1rem 2rem;
     }
+    
     /* Proje listesi stili */
     .project-list {
       list-style: none;
       padding-left: 0;
+      margin-top: 1rem;
     }
-    .project-list li {
-      padding: 5px 0;
+    .project-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      transition: transform 0.3s ease, filter 0.3s ease;
     }
-    .project-list li a {
-      text-decoration: none;
-      color: var(--accent-color);
-      transition: color 0.3s ease;
+    .project-item:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
     }
-    .project-list li a:hover {
-      color: #1e293b;
+    .project-item h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.2em;
+    }
+    .project-description {
+      margin: 0;
+      font-size: 0.9em;
+    }
+    
+    /* Her proje için farklı renk ve font ataması (4 renk döngüsü, 5. proje için tekrarla) */
+    .project-item:nth-child(1) {
+      background-color: #FDFBD4;
+      font-family: 'Arial', sans-serif;
+    }
+    .project-item:nth-child(2) {
+      background-color: #BDB96A;
+      font-family: 'Georgia', serif;
+    }
+    .project-item:nth-child(3) {
+      background-color: #C1BFFF;
+      font-family: 'Courier New', monospace;
+    }
+    .project-item:nth-child(4) {
+      background-color: #CF6DFC;
+      font-family: 'Times New Roman', serif;
+    }
+    .project-item:nth-child(5) {
+      background-color: #FDFBD4;
+      font-family: 'Verdana', sans-serif;
     }
     
     footer {
@@ -124,6 +203,18 @@
 
   <!-- Arka plan için canvas: fare hareketlerini takip eden çizgi burada çizilecek -->
   <canvas id="backgroundCanvas"></canvas>
+
+  <!-- Menü butonu -->
+  <button id="menuBtn">Menü</button>
+  
+  <!-- Sağdan kayan yan menü -->
+  <div class="menu" id="sideMenu">
+    <a href="#about">Hakkımda</a>
+    <a href="#projects">Projeler</a>
+    <a href="#skills">Yetenekler</a>
+    <a href="#contact">İletişim</a>
+  </div>
+
   <!-- Başlık bölümü -->
   <header>
     <h1>Merhaba, Ben Arda</h1>
@@ -144,7 +235,7 @@
     <div class="card" id="projects">
       <div class="card-header">Projeler</div>
       <div class="card-content">
-        <!-- İçi dinamik olarak doldurulacak -->
+        <!-- Projeler dinamik olarak buraya yüklenecek -->
         <p>Projeler yükleniyor...</p>
       </div>
     </div>
@@ -170,17 +261,22 @@
     <p>&copy; 2025 Arda. Tüm hakları saklıdır.</p>
   </footer>
 
-  <!-- Menü açma/kapama ve kartların açılır kapanır işlevlerinin JavaScript kodları -->
+  <!-- JavaScript Kodları -->
   <script>
+    // Kayan Menü
+    const menuBtn = document.getElementById('menuBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    menuBtn.addEventListener('click', () => {
+      sideMenu.classList.toggle('active');
+    });
+
     // Kart (Accordion) davranışı
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
       const header = card.querySelector('.card-header');
       header.addEventListener('click', () => {
-        // Açma/kapatma işlemi
         card.classList.toggle('active');
-
-        // Eğer bu kart "Projeler" ise ve henüz doldurulmadıysa verileri çek
+        // Projeler kartı için, eğer henüz yüklenmediyse GitHub projelerini çek
         if (card.id === 'projects' && card.classList.contains('active') && !card.hasAttribute('data-loaded')) {
           loadProjects(card.querySelector('.card-content'));
           card.setAttribute('data-loaded', 'true');
@@ -188,17 +284,24 @@
       });
     });
 
-    // GitHub API'den en son 5 projeyi çeken fonksiyon
+    // GitHub API'sinden en son 5 projeyi çekip gösteren fonksiyon
     function loadProjects(container) {
       container.innerHTML = '<p>Projeler yükleniyor...</p>';
-      const githubUsername = 'adogrul'; // GitHub kullanıcı adını buraya yaz
+      const githubUsername = 'your-github-username'; // GitHub kullanıcı adını buraya gir
       fetch(`https://api.github.com/users/${githubUsername}/repos?sort=created&direction=desc`)
         .then(response => response.json())
         .then(data => {
           const latestFive = data.slice(0, 5);
           let html = '<ul class="project-list">';
           latestFive.forEach(repo => {
-            html += `<li><a href="${repo.html_url}" target="_blank">${repo.name}</a></li>`;
+            html += `
+              <li class="project-item">
+                <a href="${repo.html_url}" target="_blank">
+                  <h3>${repo.name}</h3>
+                </a>
+                <p class="project-description">${repo.description ? repo.description : "Açıklama mevcut değil."}</p>
+              </li>
+            `;
           });
           html += '</ul>';
           container.innerHTML = html;
@@ -208,10 +311,8 @@
           console.error('Error fetching projects: ', error);
         });
     }
-  </script>
 
-  <!-- Arka planda fare hareketini takip eden çizgi efekti (iz bırakmadan) -->
-  <script>
+    // Arka plan canvas: fare hareketini takip eden çizgi (iz bırakmadan)
     const canvas = document.getElementById('backgroundCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -223,19 +324,19 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Başlangıç noktaları: merkezden başlıyor
+    // Başlangıç noktaları: merkeze yakın başlangıç
     let targetX = window.innerWidth / 2;
     let targetY = window.innerHeight / 2;
     let currentX = targetX, currentY = targetY;
     let prevX = currentX, prevY = currentY;
 
-    // Fare hareketini yakala
+    // Fare hareketi ile hedef konum güncelle
     window.addEventListener('mousemove', (e) => {
       targetX = e.clientX;
       targetY = e.clientY;
     });
 
-    // Her frame'de canvas'ı temizleyip, çizgiyi güncelle (iz kalmadan)
+    // Her frame'de canvas'ı temizleyip yeni çizgi çiz (iz bırakmadan)
     function animate() {
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
