@@ -9,7 +9,7 @@
     :root {
       --primary-bg: #f3f4f6;      /* Açık arka plan */
       --accent-color: #334155;    /* Kurumsal koyu ton (metin ve vurgu) */
-      --secondary-bg: #e2e8f0;    /* İkincil öğeler için ton */
+      --secondary-bg: #e2e8f0;    /* Kart başlıkları için hafif ton */
       --menu-bg: #ffffff;         /* Menü arka planı */
       --transition-speed: 0.3s;
     }
@@ -19,7 +19,7 @@
       padding: 0;
       box-sizing: border-box;
     }
-
+    
     body {
       font-family: Arial, sans-serif;
       background-color: var(--primary-bg);
@@ -38,89 +38,63 @@
       z-index: -1;
       pointer-events: none;
     }
-
-    /* Genel içerik stil ve kapsayıcı */
+    
+    /* Genel içerik kapsayıcısı */
     .container {
       padding: 2rem;
       max-width: 960px;
       margin: auto;
     }
-
+    
     header {
       text-align: center;
       padding: 2rem;
-      background: var(--primary-bg);
+      background: var(--secondary-bg);
       border-radius: 20px;
       margin: 2rem;
       animation: fadeIn 1s ease forwards;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
-
-    /* Basit fade-in animasyonu */
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Menü butonu */
-    button#menuBtn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: var(--accent-color);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: background-color var(--transition-speed);
-      z-index: 1001;
-    }
-    button#menuBtn:hover {
-      background-color: #1e293b;
-    }
-
-    /* Yan menü - sağdan açılan panel */
-    .menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 250px;
-      height: 100%;
-      background-color: var(--menu-bg);
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-      border-radius: 20px 0 0 20px;
-      transform: translateX(100%);
-      transition: transform var(--transition-speed) ease;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      padding-top: 60px;
-    }
-    .menu.active {
-      transform: translateX(0);
-    }
-    .menu a {
-      padding: 15px 20px;
-      text-decoration: none;
-      color: var(--accent-color);
-      border-bottom: 1px solid var(--secondary-bg);
-      transition: background-color var(--transition-speed);
-    }
-    .menu a:hover {
-      background-color: var(--secondary-bg);
-    }
-
-    /* İçerik bölümleri */
-    section {
-      margin: 2rem auto;
+    
+    /* Kart (accordion) stilleri */
+    .card {
       background: #fff;
-      padding: 2rem;
       border-radius: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1s ease forwards;
+      margin: 2rem auto;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      cursor: pointer;
     }
-
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card-header {
+      padding: 1rem 2rem;
+      background-color: var(--secondary-bg);
+      font-size: 1.2em;
+      font-weight: bold;
+      transition: background-color var(--transition-speed);
+    }
+    .card-header:hover {
+      background-color: var(--menu-bg);
+    }
+    .card-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 2rem;
+    }
+    .card.active .card-content {
+      max-height: 200px; /* Yeterli bir max yükseklik değeri */
+      padding: 1rem 2rem;
+    }
+    
     footer {
       text-align: center;
       padding: 1rem;
@@ -134,60 +108,62 @@
   <!-- Arka plan için canvas: fare hareketlerini takip eden çizgi burada çizilecek -->
   <canvas id="backgroundCanvas"></canvas>
 
-  <!-- Menü butonu -->
-  <button id="menuBtn">Menü</button>
-  
-  <!-- Sağdan kayan yan menü -->
-  <div class="menu" id="sideMenu">
-    <a href="#about">Hakkımda</a>
-    <a href="#projects">Projeler</a>
-    <a href="#skills">Yetenekler</a>
-    <a href="#contact">İletişim</a>
-  </div>
-
   <!-- Başlık bölümü -->
   <header>
     <h1>Merhaba, Ben Arda</h1>
     <p>Kişisel portfolyo sayfama hoş geldiniz.</p>
   </header>
 
-  <!-- Ana içerik -->
+  <!-- Kart şeklindeki içerikler -->
   <div class="container">
-    <section id="about">
-      <h2>Hakkımda</h2>
-      <p>Kendimi geliştirmeyi seven, modern ve yenilikçi yaklaşımlarla dolu bir web geliştiricisiyim. Tasarımda keskin hatlardan uzak, yumuşak geçişlere önem veririm.</p>
-    </section>
+    <!-- Hakkımda Kartı -->
+    <div class="card" id="about">
+      <div class="card-header">Hakkımda</div>
+      <div class="card-content">
+        <p>Kendimi geliştirmeyi seven, modern ve yenilikçi yaklaşımlarla dolu bir web geliştiricisiyim. Tasarımda keskin hatlardan uzak, yumuşak geçişlere önem veririm.</p>
+      </div>
+    </div>
     
-    <section id="projects">
-      <h2>Projeler</h2>
-      <p>Yaratıcı ve fonksiyonel projeler üreterek dijital dünyayı daha yaşanabilir kılmayı hedefliyorum.</p>
-    </section>
+    <!-- Projeler Kartı -->
+    <div class="card" id="projects">
+      <div class="card-header">Projeler</div>
+      <div class="card-content">
+        <p>Yaratıcı ve fonksiyonel projeler üreterek dijital dünyayı daha yaşanabilir kılmayı hedefliyorum.</p>
+      </div>
+    </div>
     
-    <section id="skills">
-      <h2>Yetenekler</h2>
-      <p>Frontend ve backend teknolojilerinde modern web tasarımlarını hayata geçiriyorum.</p>
-    </section>
+    <!-- Yetenekler Kartı -->
+    <div class="card" id="skills">
+      <div class="card-header">Yetenekler</div>
+      <div class="card-content">
+        <p>Frontend ve backend teknolojilerinde modern web tasarımlarını hayata geçiriyorum.</p>
+      </div>
+    </div>
     
-    <section id="contact">
-      <h2>İletişim</h2>
-      <p>Proje ve işbirlikleri için bana <a href="mailto:email@example.com">email@example.com</a> üzerinden ulaşabilirsin.</p>
-    </section>
+    <!-- İletişim Kartı -->
+    <div class="card" id="contact">
+      <div class="card-header">İletişim</div>
+      <div class="card-content">
+        <p>Proje ve işbirlikleri için bana <a href="mailto:email@example.com">email@example.com</a> üzerinden ulaşabilirsin.</p>
+      </div>
+    </div>
   </div>
 
   <footer>
     <p>&copy; 2025 Arda. Tüm hakları saklıdır.</p>
   </footer>
 
-  <!-- Menü açma/kapama JavaScript kodu -->
-  <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    menuBtn.addEventListener('click', () => {
-      sideMenu.classList.toggle('active');
+    // Kart (Accordion) davranışı
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      const header = card.querySelector('.card-header');
+      header.addEventListener('click', () => {
+        card.classList.toggle('active');
+      });
     });
   </script>
 
-  <!-- Arka planda fare hareketlerini takip eden çizgi efekti (iz bırakmadan) -->
+  <!-- Arka planda fare hareketini takip eden çizgi efekti (iz bırakmadan) -->
   <script>
     const canvas = document.getElementById('backgroundCanvas');
     const ctx = canvas.getContext('2d');
@@ -200,30 +176,27 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Başlangıç noktaları: merkezden başlıyor
+    // Başlangıç noktaları: merkeze yakın başlangıç
     let targetX = window.innerWidth / 2;
     let targetY = window.innerHeight / 2;
     let currentX = targetX, currentY = targetY;
     let prevX = currentX, prevY = currentY;
 
-    // Fare hareketlerini yakala ve hedef konumu güncelle
+    // Fare hareketi ile hedef konum güncelle
     window.addEventListener('mousemove', (e) => {
       targetX = e.clientX;
       targetY = e.clientY;
     });
 
-    // Animasyon: her frame'de canvas tamamen temizleniyor, böylece iz kalmıyor
+    // Her frame'de canvas'ı tamamen temizleyerek iz bırakmaz
     function animate() {
       requestAnimationFrame(animate);
-      
-      // Canvas'ı tamamen temizle (iz bırakmadan)
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Yumuşak geçiş: fare konumuna doğru lerp (linear interpolation)
+      // Linear interpolation (lerp) ile yumuşak geçiş
       currentX += (targetX - currentX) * 0.15;
       currentY += (targetY - currentY) * 0.15;
 
-      // Önceki konum ile şimdiki konum arasında çizgi çiz
       ctx.beginPath();
       ctx.moveTo(prevX, prevY);
       ctx.lineTo(currentX, currentY);
@@ -231,7 +204,6 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Önceki konumu güncelle
       prevX = currentX;
       prevY = currentY;
     }
